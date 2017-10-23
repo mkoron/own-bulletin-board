@@ -64,6 +64,8 @@ for row in toplevel:
 
 print("""
       </p>
+      <hr>
+      <a href='edit.cgi'>Post a message</a>
    </body>
 </html>
 """

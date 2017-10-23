@@ -32,7 +32,7 @@ print("""
         <title>View Message</title>
     </head>
     <body>
-        <h1>View the Message</h1>
+        <h1>View Message</h1>
     """)
 
 try:
