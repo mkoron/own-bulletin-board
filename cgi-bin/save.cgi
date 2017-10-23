@@ -1,31 +1,17 @@
 #!/usr/bin/env python3
 print("Content-type: text/html\n")
 
-import cgitb
-import sqlite3
-import cgi, sys, os
+import utils
+import cgi, sys
 
-#Remove before production deployment
-cgitb.enable()
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__ + "/../"))
-db_path = os.path.join(BASE_DIR, 'bulletin_board.sqlite')
-
-def quote(string):
-    if string:
-        return string.replace("'", "\\")
-    else:
-        return string
-
-conn = sqlite3.connect(db_path)
-c = conn.cursor()
+cursor, conn = utils.connectDB(False)
 
 form = cgi.FieldStorage()
 
-sender = quote(form.getvalue('sender'))
-subject =quote(form.getvalue('subject'))
-text = quote(form.getvalue('text'))
-reply_to = quote(form.getvalue('reply_to'))
+sender = utils.quote(form.getvalue('sender'))
+subject =utils.quote(form.getvalue('subject'))
+text = utils.quote(form.getvalue('text'))
+reply_to = utils.quote(form.getvalue('reply_to'))
 
 if not (sender and subject and text):
     print('Please fill all the fields')
@@ -36,7 +22,7 @@ if reply_to is not None:
 else:
     query = "INSERT INTO messages(sender, subject, text) VALUES ('{}', '{}', '{}')""".format(sender, subject, text)
 
-c.execute(query)
+cursor.execute(query)
 conn.commit()
 
 print("""

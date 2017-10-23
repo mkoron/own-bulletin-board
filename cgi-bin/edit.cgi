@@ -1,18 +1,12 @@
 #!/usr/bin/env python3
 print("Content-type: text/html\n")
 
-import cgitb
+import cgitb, cgi
 import sqlite3
-import cgi, sys, os
+import utils
 
-#Remove before production deployment
-cgitb.enable()
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__ + "/../"))
-db_path = os.path.join(BASE_DIR, 'bulletin_board.sqlite')
-
-conn = sqlite3.connect(db_path)
-c = conn.cursor()
+cursor, conn = utils.connectDB(False)
 
 form = cgi.FieldStorage()
 reply_to = form.getvalue('reply_to')
@@ -31,8 +25,8 @@ print("""
 subject = ''
 if reply_to is not None:
     print('<input type="hidden" name="reply_to" value="{}"'.format(reply_to))
-    c.execute('SELECT subject FROM messages WHERE id = {}'.format(reply_to))
-    subject = c.fetchone()[0]
+    cursor.execute('SELECT subject FROM messages WHERE id = {}'.format(reply_to))
+    subject = cursor.fetchone()[0]
     if not subject.startswith('Re: '):
         subject = 'Re: ' + subject
 

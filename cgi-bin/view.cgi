@@ -1,27 +1,12 @@
 #!/usr/bin/env python3
 print("Content-type: text/html\n")
 
-import cgitb
+import cgitb, cgi
 import sqlite3
-import cgi, sys, os
+import utils
+import sys
 
-#Remove before production deployment
-cgitb.enable()
-
-BASE_DIR = os.path.dirname(os.path.abspath(__file__ + "/../"))
-db_path = os.path.join(BASE_DIR, 'bulletin_board.sqlite')
-
-# Row factory
-# It accepts the cursor and the original row as a tuple and will return the real result row.
-def dict_factory(cursor, row):
-    d = {}
-    for idx, col in enumerate(cursor.description):
-        d[col[0]] = row[idx]
-    return d
-
-conn = sqlite3.connect(db_path)
-conn.row_factory = dict_factory
-c = conn.cursor()
+cursor, _ = utils.connectDB()
 
 form = cgi.FieldStorage()
 id = form.getvalue('id')
@@ -41,8 +26,8 @@ except:
     print('Invalid message ID')
     sys.exit()
 
-c.execute('SELECT * FROM messages WHERE id = {}'.format(id))
-rows = c.fetchall()
+cursor.execute('SELECT * FROM messages WHERE id = {}'.format(id))
+rows = cursor.fetchall()
 
 if not rows:
     print('Unknown message ID')
