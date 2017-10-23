@@ -34,6 +34,7 @@ def createBulletinDB(db_name, table_name):
                                   text     TEXT NOT NULL
                                   )
     """.format(table_name))
+    print(table_name)
     conn.commit()
     conn.close()
 
