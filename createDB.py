@@ -34,7 +34,8 @@ def createBulletinDB(db_name, table_name):
                                   text     TEXT NOT NULL
                                   )
     """.format(table_name))
-
+    conn.commit()
+    conn.close()
 
 if isSQLite3(DB_NAME):
     print("Database already exists!")
